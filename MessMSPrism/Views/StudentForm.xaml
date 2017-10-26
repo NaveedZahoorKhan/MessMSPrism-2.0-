@@ -1,0 +1,124 @@
+﻿<UserControl
+    x:Class="MessMSPrism.Views.StudentForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:prism="http://prismlibrary.com/"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <Grid Height="400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Label Content="Name: " />
+                <Label Content=" " />
+                <TextBox
+                    Width="180"
+                    controls:TextBoxHelper.Watermark="Enter Student Name"
+                    Text="{Binding Name}" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="2"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Label Content="Roll#: " />
+                <Label Content=" " />
+                <TextBox
+                    Width="180"
+                    controls:TextBoxHelper.Watermark="Enter Student Roll#"
+                    Text="{Binding Roll}" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="3"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Label Content="CNIC: " />
+                <Label Content=" " />
+                <TextBox
+                    Width="180"
+                    controls:TextBoxHelper.Watermark="Enter Student's CNIC"
+                    Text="{Binding Cnic}" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="4"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Label Content="Room#: " />
+                <Label Content=" " />
+                <TextBox
+                    Width="180"
+                    controls:TextBoxHelper.Watermark="Enter Student Room #"
+                    Text="{Binding Room}" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="5"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Label Content="Mess #: " />
+                <Label Content=" " />
+                <TextBox
+                    Width="180"
+                    IsEnabled="False"
+                    Text="{Binding Mess}" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Row="6"
+                Grid.RowSpan="1"
+                Grid.Column="0"
+                Margin="320,22,47,10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Command="{Binding Save}"
+                    Content="Save Student"
+                    Style="{DynamicResource SquareButtonStyle}" />
+                <Label />
+                <Button
+                    Command="{Binding Cancel}"
+                    Content="Cancel"
+                    IsCancel="True"
+                    Style="{DynamicResource SquareButtonStyle}" />
+
+            </StackPanel>
+            <StackPanel
+                Grid.Row="1"
+                Grid.RowSpan="6"
+                Grid.Column="1">
+                <Image Height="150" Source="{Binding DefaultMale, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+                <Button
+                    Width="60"
+                    Command="{Binding BrowseButtonClick}"
+                    Content="Browse"
+                    Style="{DynamicResource SquareButtonStyle}" />
+                <Label />
+                <Image Height="150" Source="{Binding QrCode}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
