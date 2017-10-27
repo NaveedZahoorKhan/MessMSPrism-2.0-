@@ -26,12 +26,10 @@ namespace MessMSPrism.ViewModels
         private string _name = String.Empty;
         private string _roll = String.Empty;
         private string _qrCode = string.Empty;
-        private FirstTimeSetup _firstTimeSetup;
-        private SqlCeConnection _sqlCeConnection;
-        private SqlCeCommand _sqlCeCommand;
+
         private static string _imgAddress;
         private string _img;
-        private string selectMaxID => @"select max(id) from student;";
+     
 
         #endregion
         #region Properties
@@ -143,25 +141,7 @@ namespace MessMSPrism.ViewModels
         private void SaveStudent()
         {
 
-            if (_sqlCeConnection.State != ConnectionState.Open)
-            {
-                _sqlCeConnection.Open();
-            }
-            string command = "insert into student(name, roll, room, qr, photo, cnic) values (@name, @roll, @room, @qr, @photo, @cnic)";
-            _sqlCeCommand = new SqlCeCommand(command, _sqlCeConnection);
-            _sqlCeCommand.Parameters.AddWithValue("@name", Name);
-            _sqlCeCommand.Parameters.AddWithValue("@roll", Roll);
-            _sqlCeCommand.Parameters.AddWithValue("@room", Room);
-            _sqlCeCommand.Parameters.AddWithValue("@qr", QrCode);
-            _sqlCeCommand.Parameters.AddWithValue("@photo", DefaultMale);
-            _sqlCeCommand.Parameters.AddWithValue("@cnic", Cnic);
-
-
-            int res = _sqlCeCommand.ExecuteNonQuery();
-            if (res < 0)
-            {
-                Console.WriteLine("Error while updating table");
-            }
+         
         }
 
         static StudentFormViewModel _studentFormViewModel = new StudentFormViewModel();
@@ -179,42 +159,17 @@ namespace MessMSPrism.ViewModels
         }
         public StudentFormViewModel()
         {
-            _sqlCeConnection = new SqlCeConnection();
             Save = new DelegateCommand(SaveStudent);
             Cancel = new DelegateCommand(CancelMethod);
             BrowseButtonClick = new DelegateCommand(BrowseFile);
-            _sqlCeConnection.ConnectionString = "DataSource = \"MessMs.sdf\"; Password=\"X_Strik3r\"; Persist Security Info = False; ";
-
-            if (!File.Exists("MessMs.sdf"))
-                _firstTimeSetup = new FirstTimeSetup();
-            else
-            {
-                FillMess();
-            }
+        
 
         }
 
 
         public void FillMess()
         {
-            _sqlCeConnection.Open();
-            _sqlCeCommand = new SqlCeCommand(selectMaxID, _sqlCeConnection);
-            var res = _sqlCeCommand.ExecuteReader();
-            //     Console.WriteLine(res.Depth);
-            while (res.Read())
-            {
-                try
-                {
-                    Mess = res.GetInt32(0).ToString();
-                }
-                catch (SqlNullValueException e)
-                {
-                    Mess = 1.ToString();
-                }
-
-
-
-            }
+           
         }
 
         public void GenerateQr(string val)
@@ -237,34 +192,7 @@ namespace MessMSPrism.ViewModels
 
         #region Classes
 
-        private class FirstTimeSetup
-        {
-            private string addStudentTable => @"create table student" +
-                                              " ( " +
-                                              "id int primary key  identity," +
-                                              "name nvarchar(30) not null," +
-                                              "roll int not null," +
-                                              "room int not null," +
-                                              "qr nvarchar(255) not null unique," +
-                                              "photo nvarchar(255) not null unique," +
-                                              "cnic int not null unique ); ";
-
-            public FirstTimeSetup()
-            {
-                SqlCeConnection sql = new SqlCeConnection
-                {
-                    ConnectionString =
-                        "DataSource = \"MessMs.sdf\"; Password=\"X_Strik3r\"; Persist Security Info = False; "
-                };
-                SqlCeEngine ceEngine = new SqlCeEngine(sql.ConnectionString);
-
-                ceEngine.CreateDatabase();
-                sql.Open();
-                SqlCeCommand comm = new SqlCeCommand(addStudentTable, sql);
-                var res = comm.ExecuteNonQuery();
-
-            }
-        }
+       
 
 
         #endregion
