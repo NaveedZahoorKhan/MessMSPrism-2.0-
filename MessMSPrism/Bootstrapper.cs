@@ -18,9 +18,7 @@ namespace MessMSPrism
         private RegionManager _regionManager;
         protected override void InitializeShell()
         {
-            using (var ctx  = new MessMsContext())
-            {
-               
+          
             Application.Current.MainWindow.Show();
             _regionManager = new RegionManager();
             _regionManager.RegisterViewWithRegion("MainRegion", typeof(Dashboard));
