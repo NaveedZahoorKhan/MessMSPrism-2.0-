@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using MessMSPrism.Resources.Enums;
 namespace MessMSPrism.Models
 {
-    class Attendance
+    public class Attendance
     {
-        public int StudentId { get; set; }
+        public int Id { get; set; }
         public DateTime Time { get; set; }
         public ShifId ShifId { get; set; }
 
+        // has one student
+        public virtual Student Student{ get; set; }
 
 
     }

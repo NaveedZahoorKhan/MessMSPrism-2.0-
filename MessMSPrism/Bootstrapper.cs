@@ -2,7 +2,9 @@
 using Prism.Unity;
 using MessMSPrism.Views;
 using System.Windows;
+using MessMSPrism.Models;
 using Prism.Regions;
+using Attendance = MessMSPrism.Views.Attendance;
 
 namespace MessMSPrism
 {
@@ -16,7 +18,9 @@ namespace MessMSPrism
         private RegionManager _regionManager;
         protected override void InitializeShell()
         {
-          
+            using (var ctx  = new MessMsContext())
+            {
+               
             Application.Current.MainWindow.Show();
             _regionManager = new RegionManager();
             _regionManager.RegisterViewWithRegion("MainRegion", typeof(Dashboard));
