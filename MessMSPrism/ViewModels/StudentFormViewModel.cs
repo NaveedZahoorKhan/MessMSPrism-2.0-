@@ -5,11 +5,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using MessMSPrism.Models;
+using MessMSPrism.Resources.HelperClasses;
 using Microsoft.Win32;
+using Prism.Regions;
 using QRCoder;
 
 namespace MessMSPrism.ViewModels
@@ -18,41 +22,52 @@ namespace MessMSPrism.ViewModels
     {
         #region private fields
 
-        private static string _sampleMale = "";
-        private string _cnic = String.Empty;
-        private string _room = null;
-        private string _cell = null;
-        private string _mess = String.Empty;
-        private string _name = String.Empty;
-        private string _roll = String.Empty;
-        private string _qrCode = string.Empty;
-
+        private static string _sampleMale = "../Resources/icons/profile-default-male.png";
+        private string _cnic;
+        private int _room ;
+        private string _cell;
+        private string _mess;
+        private string _name ;
+        private string _roll;
+        private string _qrCode;
+        private string _finalImage;
         private static string _imgAddress;
         private string _img;
-     
-
+        private readonly IRegionManager _regionManager;
+        private Navigation _navigation;
         #endregion
         #region Properties
-
+        public Repository<Student> Repo { get; set; }
         public string Cnic
         {
             get { return _cnic; }
-            set { _cnic = value; }
+            set
+            {
+                SetProperty(ref _cnic, value); 
+                RaisePropertyChanged("Cnic");
+            }
         }
+
         public string Name
 
         {
             get { return _name; }
             set
             {
-                _name = value;
-                //INotifyPropertyChanged("Name");
+                SetProperty(ref _name, value);
+                
+                RaisePropertyChanged("Name");
             }
         }
+
         public string Roll
         {
             get { return _roll; }
-            set { _roll = value; }
+            set
+            {
+                SetProperty(ref _roll, value); 
+                RaisePropertyChanged("Roll");
+            }
         }
         public string Mess
 
@@ -60,45 +75,56 @@ namespace MessMSPrism.ViewModels
             get { return _mess; }
             set
             {
-                _mess = value;
-                //NotifyPropertyChanged("Mess");
-                GenerateQr(_mess);
+                SetProperty(ref _mess, value); 
+                RaisePropertyChanged("Mess");
             }
         }
         public string QrCode
         {
-            get { return _qrCode; }
-            set { _qrCode = value; }
+            get
+            {
+                return _qrCode; 
+                
+            }
+            set
+            {
+                SetProperty(ref  _qrCode, value);
+                RaisePropertyChanged("QrCode");
+            }
         }
 
-        public string Room
+        public int Room
         {
             get { return _room; }
             set
             {
-                _room = value;
-                //NotifyPropertyChanged("Room");
+                SetProperty(ref _room, value);
+                RaisePropertyChanged("Room");
             }
         }
-
+        
         public  string DefaultMale
         {
             get { return _sampleMale; }
             set
             {
-                SetProperty(ref value, _sampleMale);
-                OnPropertyChanged("DefaultMale");
+
+                _sampleMale = null;
+              SetProperty(ref _sampleMale, value);
+                RaisePropertyChanged("DefaultMale");
             }
         }
 
         public string Cell
         {
-            set
-            {
-                _cell = value;
-                  
-            }
+            set { SetProperty(ref _cell, value); }
             get { return _cell; }
+        }
+
+        public string FinalImage
+        {
+            set { SetProperty(ref _finalImage, value); }
+            get { return _finalImage; }
         }
 
         public static string ImgAddress
@@ -117,7 +143,7 @@ namespace MessMSPrism.ViewModels
         private string Img
         {
             get { return _img; }
-            set { _img = value; }
+            set { SetProperty(ref _img, value); }
         }
 
         #endregion
@@ -126,50 +152,72 @@ namespace MessMSPrism.ViewModels
 
         public DelegateCommand BrowseButtonClick { get; private set; }
         public  DelegateCommand Save { get; private set; }
-        public DelegateCommand Cancel { get; private set; }
+        public DelegateCommand<String> Cancel { get; private set; }
 
 
         #endregion
 
         #region Methods
 
-        private void CancelMethod()
+        private void CheckForEnvironment()
         {
-
+              
         }
+        
 
         private void SaveStudent()
         {
-
+            CheckForEnvironment();
+            Student student = new Student()
+            {
+                RoomNo = Room,
+                Cnic = Cnic,
+                QrPath =  QrCode,
+                Name =  Name,
+                ImgPath = FinalImage,
+               
+            };
+            Repo.Insert(student);
          
         }
 
-        static StudentFormViewModel _studentFormViewModel = new StudentFormViewModel();
-        private static void BrowseFile()
+      
+        private void BrowseFile()
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "JPEG (.jpeg) |*.jpg";
+            FileDialog dialog = new OpenFileDialog();
+            dialog.Title = "Please select an Image";
+            dialog.Filter = "Image Files | *.jpg;*.png;*.jpeg;";
             var res = dialog.ShowDialog();
-            if (res == true)
-            {
-                string fname = dialog.FileName;
-                
-            }
+            if (!res.Equals(true)) return;
+            DefaultMale = dialog.FileName;
+           FinalImage = DateTime.Now.Ticks + RandomString(10);
 
         }
-        public StudentFormViewModel()
+        private static readonly Random Random = new Random();
+
+        private static string RandomString(int length)
         {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[Random.Next(s.Length)]).ToArray());
+        }
+        public StudentFormViewModel(IRegionManager regionManager)
+        {
+            _regionManager = regionManager;
+            _navigation = new Navigation(regionManager);
             Save = new DelegateCommand(SaveStudent);
-            Cancel = new DelegateCommand(CancelMethod);
+            Cancel = new DelegateCommand<String>(_navigation.Navigate);
             BrowseButtonClick = new DelegateCommand(BrowseFile);
-        
-
+            Repo = new Repository<Student>();
+            FillMess();
         }
 
 
-        public void FillMess()
+        private void FillMess()
         {
-           
+            var res = Repo.GetCount();
+            Mess = (res + 1).ToString();
+
         }
 
         public void GenerateQr(string val)
@@ -189,13 +237,7 @@ namespace MessMSPrism.ViewModels
 
 
 
-
-        #region Classes
-
-       
-
-
-        #endregion
+        
 
     }
 }

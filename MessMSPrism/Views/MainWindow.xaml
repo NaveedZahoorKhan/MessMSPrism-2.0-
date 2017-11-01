@@ -10,14 +10,10 @@
     MinWidth="900"
     MinHeight="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Background="{DynamicResource MaterialDesignBackground}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
     ShowMaxRestoreButton="False"
-    WindowState="Maximized"
-    WindowTitleBrush="{DynamicResource MaterialDesignBody}">
+    WindowState="Maximized">
     <Grid Margin="0,0,0,-82">
         <ContentControl Margin="0,0,0,114" prism:RegionManager.RegionName="MainRegion" />
         <!--        <views:Dashboard Margin="0,0,-253,63" />-->
     </Grid>
 </controls:MetroWindow>
-

@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using System;
+using MessMSPrism.Resources.HelperClasses;
 using Prism.Regions;
 
 namespace MessMSPrism.ViewModels
@@ -12,7 +13,7 @@ namespace MessMSPrism.ViewModels
         #region private fields
 
         private readonly IRegionManager _regionManager;
-
+        private Navigation _navigation;
 
         #endregion
         #region Properties
@@ -35,23 +36,16 @@ namespace MessMSPrism.ViewModels
         public DashboardViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-
-            AddStudent = new DelegateCommand<string>(Navigate);
-            ManageStudent = new DelegateCommand<string>(Navigate);
-            Billing = new DelegateCommand<string>(Navigate);
-            Dishes = new DelegateCommand<string>(Navigate);
-            Attendance = new DelegateCommand<string>(Navigate);
+            _navigation = new Navigation(regionManager);
+            AddStudent = new DelegateCommand<string>(_navigation.Navigate);
+            ManageStudent = new DelegateCommand<string>(_navigation.Navigate);
+            Billing = new DelegateCommand<string>(_navigation.Navigate);
+            Dishes = new DelegateCommand<string>(_navigation.Navigate);
+            Attendance = new DelegateCommand<string>(_navigation.Navigate);
         }
 
 
-        private void Navigate(string path)
-        {   
-            if (path != null)
-            {
-                _regionManager.RequestNavigate("MainRegion", path);
-            }
-        }
-
+        
         #endregion
     }
 }

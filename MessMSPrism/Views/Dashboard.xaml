@@ -34,7 +34,6 @@
                 MinWidth="160"
                 MinHeight="120"
                 Margin="14,40"
-                Background="{DynamicResource MaterialDesignBody}"
                 Command="{Binding AddStudent}"
                 CommandParameter="StudentForm"
                 TiltFactor="2">
@@ -49,7 +48,6 @@
                 MinWidth="160"
                 MinHeight="120"
                 Margin="14,40"
-                Background="{DynamicResource MaterialDesignBody}"
                 Command="{Binding ManageStudent}"
                 CommandParameter="UpdateStudentForm">
 
@@ -64,7 +62,6 @@
                 MinWidth="160"
                 MinHeight="120"
                 Margin="14,40"
-                Background="{DynamicResource MaterialDesignBody}"
                 Command="{Binding Billing}"
                 CommandParameter="Billing"
                 KeepDragging="True"
@@ -87,7 +84,6 @@
                 MinWidth="160"
                 MinHeight="120"
                 Margin="14,40"
-                Background="{DynamicResource MaterialDesignBody}"
                 Command="{Binding Dishes}"
                 CommandParameter="Dishes">
                 <Image Height="90" Source="../Resources/icons/dishes.png" />
@@ -101,7 +97,6 @@
                 MinWidth="160"
                 MinHeight="120"
                 Margin="14,40"
-                Background="{DynamicResource MaterialDesignBody}"
                 Command="{Binding Attendance}"
                 CommandParameter="Attendance">
                 <Image Height="90" Source="../Resources/icons/attendance.png" />

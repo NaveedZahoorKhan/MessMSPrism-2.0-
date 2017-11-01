@@ -2,19 +2,20 @@
     x:Class="MessMSPrism.Views.StudentForm"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:control="clr-namespace:ControlzEx;assembly=MahApps.Metro"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
-        <Grid Height="400">
+        <Grid Height="400" control:KeyboardNavigationEx.AlwaysShowFocusVisual="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
 
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -30,7 +31,8 @@
                 <Label Content=" " />
                 <TextBox
                     Width="180"
-                    controls:TextBoxHelper.Watermark="Enter Student Name"
+                    Height="33"
+                    material:TextFieldAssist.IncludeSpellingSuggestions="True"
                     Text="{Binding Name}" />
             </StackPanel>
             <StackPanel
@@ -43,7 +45,7 @@
                 <Label Content=" " />
                 <TextBox
                     Width="180"
-                    controls:TextBoxHelper.Watermark="Enter Student Roll#"
+                    Height="33"
                     Text="{Binding Roll}" />
             </StackPanel>
             <StackPanel
@@ -56,7 +58,7 @@
                 <Label Content=" " />
                 <TextBox
                     Width="180"
-                    controls:TextBoxHelper.Watermark="Enter Student's CNIC"
+                    Height="33"
                     Text="{Binding Cnic}" />
             </StackPanel>
             <StackPanel
@@ -64,12 +66,13 @@
                 Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
+                material:TextFieldAssist.HasTextFieldBox="True"
                 Orientation="Horizontal">
-                <Label Content="Room#: " />
+                <Label material:ListBoxAssist.IsToggle="True" Content="Room#: " />
                 <Label Content=" " />
                 <TextBox
                     Width="180"
-                    controls:TextBoxHelper.Watermark="Enter Student Room #"
+                    Height="33"
                     Text="{Binding Room}" />
             </StackPanel>
             <StackPanel
@@ -82,6 +85,7 @@
                 <Label Content=" " />
                 <TextBox
                     Width="180"
+                    Height="33"
                     IsEnabled="False"
                     Text="{Binding Mess}" />
             </StackPanel>
@@ -101,6 +105,7 @@
                 <Label />
                 <Button
                     Command="{Binding Cancel}"
+                    CommandParameter="Dashboard"
                     Content="Cancel"
                     IsCancel="True"
                     Style="{DynamicResource SquareButtonStyle}" />
@@ -110,7 +115,18 @@
                 Grid.Row="1"
                 Grid.RowSpan="6"
                 Grid.Column="1">
-                <Image Height="150" Source="{Binding DefaultMale, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Image
+                    x:Name="maleImage"
+                    Height="150"
+                    Source="{Binding DefaultMale, BindsDirectlyToSource=True, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Explicit, ValidatesOnNotifyDataErrors=False}">
+                    <Image.OpacityMask>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Offset="0" Color="Black" />
+                            <GradientStop Offset="1" Color="White" />
+                        </LinearGradientBrush>
+                    </Image.OpacityMask>
+                </Image>
                 <Button
                     Width="60"
                     Command="{Binding BrowseButtonClick}"
